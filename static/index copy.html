@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+	<html>
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<title>test</title>
+		<script type="text/javascript" src="jquery-1.7.1.min.js"></script>
+		<script type="text/javascript">
+		function countLikes() {
+			var _myPosts;
+			var user_id_counts = {};
+			var highestCount = 0;
+			var topLikers = [];
+			
+			var start = new Date().getTime();
+			
+			FB.api('/me/posts', function(myPosts) {
+				//_myPosts = _myPosts;
+				console.log(myPosts);
+				console.log("You have " + myPosts.data.length.toString() + " posts to examine.");
+				for(var i=0;i<myPosts.data.length;i++){
+					if(myPosts.data[i].hasOwnProperty("likes")){
+						for(var j=0; j < myPosts.data[i].likes.data.length; j++){
+							if(user_id_counts.hasOwnProperty(myPosts.data[i].likes.data[j].id.toString())){
+								user_id_counts[myPosts.data[i].likes.data[j].id.toString()]++; 
+							} else {
+								// console.log("Adding new user: " + myPosts.data[i].likes.data[j].name + "  userid: " + myPosts.data[i].likes.data[j].id);
+								user_id_counts[myPosts.data[i].likes.data[j].id.toString()] = 1;
+							}
+						}	
+					}
+				}
+				
+				//find the top likers
+				for(var key in user_id_counts){
+					if(user_id_counts[key] > highestCount){  //new highest count
+						topLikers = [];
+						highestCount = user_id_counts[key];
+						console.log("new highest count: " + highestCount);
+						topLikers.push(key)
+					} else if(user_id_counts[key] == highestCount){ //more than 1 person with this count
+						topLikers.push(key);
+					} 
+				}
+				
+				console.log("Top Linkers:");
+				// for(var i in topLikers){
+				// 	$('#results').append('<p>User id: ' + topLikers[i].toString() + '</p>');
+				// 	console.log(topLikers[i].toString());
+				// }
+				
+				for(var i in topLikers){
+					// FB.api('/'+topLikers[i].toString(), function(resp){
+					// 	$('#results').append('<p>' + resp + '</p>');
+					// });
+					console.log(topLikers[i].toString());
+				}
+				
+				FB.ui({
+				    method: 'stream.publish',
+				    attachment: {
+				      name: topLikers[0]+" is your valentine! They liked you " + highestCount + " time(s)",
+				      caption: topLikers[0]+" is my valentine! ",  //TODO fix this!!!
+				      media: [{
+				        type: 'image',
+				        href: 'http://vmlfbval.appspot.com/',
+				        src: 'http://countmeus.appspot.com/splash.jpg'
+				      }]
+				    },
+				    action_links: [{
+				      text: 'Find out who your VML FB Valentine is!',
+				      href: 'http://vmlfbval.appspot.com/'
+				    }],
+				    user_message_prompt: 'Send your valentine a message:'
+				  });
+				
+				console.log("Total time: " + (new Date().getTime() - start));
+			});
+			
+			
+		}	
+		</script>		
+	</head>
+	<body>
+		<h1>VML Facebook Valentine</h1>
+		<div id="fb-root"></div>
+	    <script>  
+		function fbLoginStatus(response) {
+			button = document.getElementById('fb-auth');
+			userInfo = document.getElementById('user-info');
+
+			if (response.authResponse) {
+			    //user is already logged in and connected
+				countLikes();
+            } else {
+                //user is not connected to your app or logged out
+                button.innerHTML = 'Login';
+                button.onclick = function() {
+                    showLoader(true);
+                    FB.login(function(response) {
+                        if (response.authResponse) {
+                            countLikes();
+                        } else {
+                            //user cancelled login or did not grant authorization
+                            showLoader(false);
+                        }
+                    }, {scope:'read_stream'});
+                }
+            }
+	  	}
+		
+		window.fbAsyncInit = function() {
+		    FB.init({
+		      appId      : '374030012622491', // App ID
+		      channelUrl : 'http://vmlfbval.appspot.com/channel.html', // Channel File
+		      status     : true, // check login status
+		      cookie     : true, // enable cookies to allow the server to access the session
+		      xfbml      : true  // parse XFBML
+		    });
+
+		    // Additional initialization code here
+			//FB.getLoginStatus(fbLoginStatus);
+			FB.Event.subscribe('auth.statusChange', fbLoginStatus);
+		};
+		
+	      (function() {
+	        var e = document.createElement('script');
+	        e.src = document.location.protocol + '//connect.facebook.net/en_US/all.js';
+	        document.getElementById('fb-root').appendChild(e);
+	      }());
+	    </script>
+		<fb:login-button perms="read_stream" show-faces="true"></fb:login-button>
+		<h2>Top Linkers:</h2>
+		<div id="results"></div>
+		
+
+	</body>
+	</html>
