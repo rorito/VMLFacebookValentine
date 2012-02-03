@@ -169,9 +169,9 @@ handlers:
   upload: static/(.*\.(bz2|gz|rar|tar|tgz|zip))
 
 # index files
-- url: /(.*)/?
+- url: /(.+)/
   static_files: static/\1/index.html
-  upload: static/(.*)/index.html
+  upload: static/(.+)/index.html
   expiration: "15m"
 
 - url: /(.+)
