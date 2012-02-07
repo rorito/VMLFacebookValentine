@@ -8,19 +8,34 @@
 	<link type="text/css" rel="stylesheet" media="all" href="all.css" />	
 </head>
 <body>
-	<div id="fb-root"><fb:login-button perms="read_stream" show-faces="true"></fb:login-button></div>
 	<div id="welcome">
-		<div id="cta">
-			<img src="/img/findyour.gif" alt="Find your Facebook Valentine. It’s probably not your lover. Chances are, it’s that one guy from high school who smelled like oatmeal and liked Anime a little too much. Find out who your digital admirer is and send them a Valentine they’re sure to ‘like’.">
-		</div>
+		<div id="fb-root"><fb:login-button class="facebook-login" size="large" perms="read_stream">Connect</fb:login-button></div>
 	</div>
 	<div id="result">
-		<div id="frame">
-			<span id="fb-result">
-				<img src=""><br/>
-				<span></span>
-			</span>
+		<div class="frame">
+			<img src=""/>
 		</div>
+		<span class="text">Now you know who your Facebook Valentine is, let them know!</span>
+		<img class="facebook-message" src="img/message.gif"/>
 	</div>
+	<div id="message">
+		<img class="choose" src="img/choose.png"/>
+		<ul class="left menu">
+			<li><img src="img/button1.gif"/></li>
+			<li><img src="img/button1.gif"/></li>
+			<li><img src="img/button1.gif"/></li>
+		</ul>
+		<div class="message-container">
+			<p>Hey random person, turns out you’re my Facebook Valentine! Whoever you are, you sure like my posts. And I like that.
+I could write "Stalker Alert" and you’d probably give it a double thumbs-up. Keep it up stranger (but stop going through my trash). Happy Valentine’s Day!</p>
+		</div>
+		<ul class="right menu">
+			<li><img src="img/button1.gif"/></li>
+			<li><img src="img/button1.gif"/></li>
+			<li><img src="img/button1.gif"/></li>
+		</ul>
+		<img class="facebook-send" src="img/send.gif"/>
+	</div>
+	<div id="happy"></div>
 </body>
 </html>

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+	<html>
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<title>test</title>
+		<script type="text/javascript" src="jquery-1.7.1.min.js"></script>
+		<script type="text/javascript">
+            function dump(arr,level) {
+                    var dumped_text = "";
+                    if(!level) level = 0;
+                    
+                    //The padding given at the beginning of the line.
+                    var level_padding = "";
+                    for(var j=0;j<level+1;j++) level_padding += "    ";
+                    
+                    if(typeof(arr) == 'object') { //Array/Hashes/Objects 
+                            for(var item in arr) {
+                                    var value = arr[item];
+                                    
+                                    if(typeof(value) == 'object') { //If it is an array,
+                                            dumped_text += level_padding + "'" + item + "' ...\n";
+                                            dumped_text += dump(value,level+1);
+                                    } else {
+                                            dumped_text += level_padding + "'" + item + "' => \"" + value + "\"\n";
+                                    }
+                            }
+                    } else { //Stings/Chars/Numbers etc.
+                            dumped_text = "===>"+arr+"<===("+typeof(arr)+")";
+                    }
+                    return dumped_text;
+            }
+      
+    		function countLikes() {
+                //testing me/feed instead of me/posts
+                // FB.api('/me/feed', function(myPosts) {
+                //     $('#results').append('<br/><br/><h1> Graph API all posts</h1>');
+                //     $('#results').append('<pre>' + dump(myPosts) +'</pre>');
+                // });
+
+                FB.api(
+		        {
+		            method: 'fql.query',
+		            //query: 'SELECT actor_id, post_id, message, target_id FROM stream WHERE source_id = me() LIMIT 5000'
+                    query: 'SELECT likes.friends, created_time FROM stream WHERE source_id = me() AND is_hidden = 0 LIMIT 5000'
+		        },
+		        function(myPosts) {
+                                $('#results').append('<br/><br/><h1> FQL all posts</h1>');
+                                $('#results').append('<pre>' + dump(myPosts) +'</pre>');
+                            }
+                );
+            
+                var _myPosts;
+                var user_id_counts = {};
+                var highestCount = 0;
+                var topLikers = [];
+                var topLikersInfo = [];
+                
+                var start = new Date().getTime();
+    			
+    			FB.api(
+		        {
+		            method: 'fql.query',
+		            query: 'SELECT uid, first_name, last_name FROM user where uid IN (SELECT likes.friends FROM stream WHERE source_id = me() AND is_hidden = 0 AND created_time > 0)'
+		        },
+		        function(myPosts) {
+                    //count the top likers
+                    for(var i=0;i < myPosts.length;i++){
+                        if(user_id_counts.hasOwnProperty(myPosts[i].uid.toString())){
+                            //already has key, increment
+                            user_id_counts[myPosts[i].uid.toString()]++;
+                        } else{
+                            user_id_counts[myPosts[i].uid.toString()] = 1;
+                        }
+                        
+                        // also keep track of the current highest
+                        if(user_id_counts[myPosts[i].uid.toString()] > highestCount){  //new highest count
+                                topLikers = [];
+                                highestCount = user_id_counts[myPosts[i].uid.toString()];
+                                topLikers.push(myPosts[i].uid.toString())
+                        } else if(user_id_counts[myPosts[i].uid.toString()] == highestCount){ //more than 1 person with this count
+                                topLikers.push(myPosts[i].uid.toString());
+                        } 
+                    }
+                            
+                    for(var j=0; j < topLikers.length;j++){
+                        FB.api(
+                            {
+                                method: 'fql.query',
+                                query: 'SELECT uid, first_name, last_name FROM user WHERE uid = ' + topLikers[j].toString()
+                            },
+                            function(data) {
+                                for(var k=0; k < data.length;k++){
+                                    $('#results').append('<p>' + data[k].first_name + ' ' + data[k].last_name + ' has liked my posts ' + highestCount +' time(s)</p>');
+                                    topLikersInfo.push(data[k]);
+                                }
+                                
+                                if(j ==0){
+                                    console.log("Total time: " + (new Date().getTime() - start));
+                                    var topName = topLikersInfo[0].first_name + ' '+ topLikersInfo[0].last_name;
+                                    var topId = topLikersInfo[0].uid;
+                                    
+                                    FB.ui({
+                                        method: 'stream.publish',
+                                        attachment: {
+                                          name: topName +" is your valentine! They liked you " + highestCount + " time(s)",
+                                          caption: topName +" is my valentine! ",  //TODO fix this!!!
+                                          media: [{
+                                            type: 'image',
+                                            href: 'http://vmlfbval.appspot.com/',
+                                            src: 'http://countmeus.appspot.com/splash.jpg'
+                                          }]
+                                        },
+                                        action_links: [{
+                                          text: 'Find out who your VML FB Valentine is!',
+                                          href: 'http://vmlfbval.appspot.com/'
+                                        }],
+                                        user_message_prompt: 'Send your valentine a message:'
+                                      });
+                                }
+                            }
+                        );
+                    }            
+                }); //end of FB.api call fql query for posts
+            }
+		</script>		
+	</head>
+	<body>
+		<h1>VML Facebook Valentine</h1>
+		<div id="fb-root"></div>
+	    <script>  
+		function fbLoginStatus(response) {
+            button = document.getElementById('fb-auth');
+            userInfo = document.getElementById('user-info');
+
+            if (response.authResponse) {
+                //user is already logged in and connected
+                    console.log("user is already logged in and connected");
+                    countLikes();
+            } else {
+                //user is not connected to your app or logged out
+                console.log("user not connected to app or logged out");
+                button.innerHTML = 'Login';
+                button.onclick = function() {
+                    console.log("button.onclick");
+                    showLoader(true);
+                    FB.login(function(response) {
+                        if (response.authResponse) {
+                            countLikes();
+                        } else {
+                            //user cancelled login or did not grant authorization
+                           showLoader(false);
+                        }
+                    }, {scope:'read_stream'});
+                }
+            }
+	  	}
+		
+		window.fbAsyncInit = function() {
+		    FB.init({
+		      appId      : '374030012622491', // App ID
+		      channelUrl : 'http://vmlfbval.appspot.com/channel.html', // Channel File
+		      status     : true, // check login status
+		      cookie     : true, // enable cookies to allow the server to access the session
+		      xfbml      : true  // parse XFBML
+		    });
+
+		    // Additional initialization code here
+			//FB.getLoginStatus(fbLoginStatus);
+			FB.Event.subscribe('auth.statusChange', fbLoginStatus);
+		};
+		
+	      (function() {
+	        var e = document.createElement('script');
+	        e.src = document.location.protocol + '//connect.facebook.net/en_US/all.js';
+	        document.getElementById('fb-root').appendChild(e);
+	   }());
+	    </script>
+		<fb:login-button perms="read_stream" show-faces="true"></fb:login-button>
+		<h2>Top Linkers:</h2>
+		<div id="results"></div>
+		
+
+	</body>
+	</html>

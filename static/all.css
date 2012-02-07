@@ -1,0 +1,137 @@
+/* reset */
+html, body, div, span, applet, object, iframe,h1, h2, h3, h4, h5, h6, p, a, 
+abbr, del, dfn, em, img, small, strike, strong, sub, sup, tt, var,b, u, i, dl, 
+dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, 
+thead, tr, th, td, canvas, details, embed,figure, figcaption, footer, header, 
+hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video 
+{margin: 0; padding: 0; border: 0; vertical-align: baseline; line-height:1.2em;}
+
+ol, ul, li{ list-style:none; }
+body{font-family:Arial, Helvetica, sans-serif; font-size:65%;}
+
+a:link, a:visited{text-decoration:underline;}
+
+body { 
+	background: #ffcccc;
+}
+
+#welcome {
+	margin: 100px auto;
+	position: relative;
+	width: 885px;
+	height:583px;
+	background: url('img/wholikes.png') no-repeat left top;
+}
+
+.facebook-login{
+	position: absolute;
+	left:696px;
+	top:556px;
+	height:25px;
+}
+
+.facebook-login a{
+	height:25px;
+}
+.facebook-login span{
+	height:16px;
+}
+
+#result {
+	margin: 100px auto;
+	position: relative;
+	width:692px;
+	height:648px;
+	background: url('img/yourval.png') no-repeat left top;
+}
+
+.frame{
+	overflow: hidden;
+	position: absolute;
+	left:226px;
+	top:286px;
+	height:220px;
+}
+
+.frame img{
+	width:220px;
+}
+
+.text {
+	position: absolute;
+	left:0;
+	top:584px;
+	text-align:center;
+	width:100%;
+	color:#280377;
+	font-size:15px;
+}
+
+.facebook-message{
+	position: absolute;
+	left:281px;
+	top:620px;
+}
+
+#message {
+	margin: 100px auto;
+	position: relative;
+	width:837px;
+	height:442px;
+}
+
+.choose {
+	position: absolute;
+	left:245px;
+	top:12px;
+}
+
+.left{
+	position: absolute;
+	left:47px;
+	top:195px;
+	text-align: right;
+}
+
+.message-container{
+	position: absolute;
+	left:91px;
+	top:141px;
+	width: 653px;
+	height:241px;
+	background: url('img/frame.png') no-repeat left top;
+}
+
+.message-container p{
+	position: absolute;
+	left:133px;
+	top:59px;
+	width:411px;
+	color:#280377;
+	font-size:18px;
+}
+
+.right{
+	position: absolute;
+	left:697px;
+	top:195px;
+}
+
+.menu{
+	
+}
+
+.facebook-send{
+	position: absolute;
+	left:384px;
+	top:403px;
+}
+
+
+#happy{
+	margin: 100px auto;
+	position: relative;
+	width:575px;
+	height:503px;
+	background: url('img/happy.png') no-repeat left top;
+}
