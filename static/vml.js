@@ -1,3 +1,4 @@
+//var ROOT_URL = 'http://localhost:8080/'
 var ROOT_URL = 'http://vmlfbval.appspot.com';
 var VALENTINE = 'MOOOOOO';
 var MESSAGE = 'Hey random person, turns out you’re my Facebook Valentine! Whoever you are, you sure like my posts. And I like that. I could write "Stalker Alert" and you’d probably give it a double thumbs-up. Keep it up stranger (but stop going through my trash). Happy Valentine’s Day!Hey random person, turns out you’re my Facebook Valentine! Whoever you are, you sure like my posts. And I like that. I could write "Stalker Alert" and you’d probably give it a double thumbs-up. Keep it up stranger (but stop going through my trash). Happy Valentine’s Day!';
@@ -10,34 +11,37 @@ $(document).ready(function(){
     
     $('.facebook-message').click(chooseMessage);
     $('.facebook-send').click(contactValentine);
+    $('.menu li').click(function(){
+        $this = $(this);
+        MESSAGE = $('span', $this).text();
+        contactValentine();
+    });
 });
 
 window.fbAsyncInit = function() {
 	console.log('FB init')
     FB.init({
       appId      : '374030012622491', // App ID
-      channelUrl : ROOT_URL + '/channel.html', // Channel File
-      status     : true, // check login status
+      channelUrl : 'http://vmlfbval.appspot.com/channel.html', // Channel File
       cookie     : true, // enable cookies to allow the server to access the session
       xfbml      : true  // parse XFBML
     });
 
-    // Additional initialization code here
-	//FB.getLoginStatus(fbLoginStatus);
 	FB.Event.subscribe('auth.statusChange', fbLoginStatus);
 };
 
 function fbLoginStatus(response) {
     if (response.authResponse) {
         //user is already logged in and connected
-            console.log("user is already logged in and connected");
-            countLikes();
+        console.log("user is already logged in and connected");
+        $('.facebook-connect').show();
+        $('.facebook-connect').click(function(){ countLikes() });
     } else {
         //user is not connected to your app or logged out
         console.log("user not connected to app or logged out");
-        $('fb_button_text').click(function() {
+        $('.facebook-login').click(function() {
             console.log("button.onclick");
-            FB.login(function(response) {
+            FB.login(function(response){
                 if (response.authResponse) {
                     countLikes();
                 }else{
@@ -49,6 +53,7 @@ function fbLoginStatus(response) {
 };
 
 function countLikes() {
+    console.log('countLikes()')
     var user_id_counts = {};
     var highestCount = 0;
     var topLikers = [];
@@ -57,9 +62,10 @@ function countLikes() {
 	FB.api(
     {
         method: 'fql.query',
-        query: 'SELECT uid FROM user where uid IN (SELECT likes.friends FROM stream WHERE source_id = me() AND is_hidden = 0 AND created_time > 0 LIMIT 5000)'
+        query: 'SELECT uid FROM user WHERE uid IN (SELECT likes.friends FROM stream WHERE source_id = me() AND is_hidden = 0 AND created_time > 0 LIMIT 5000)'
     }, 
     function(myPosts) {
+        console.log('countLikes() - callback')
         for(var i=0;i < myPosts.length;i++){
             if(user_id_counts.hasOwnProperty(myPosts[i].uid.toString())){
                 //already has key, increment
@@ -86,7 +92,7 @@ function countLikes() {
 		    function(data) {
 		    	//data = [];
 		    	if(data.length != 0){
-		    		var topName = 'Now you know ' + data[0].first_name + ' '+ data[0].last_name + ' is your Facebook Valentine, let them know!';
+		    		var topName = 'Why not send ' + data[0].first_name + ' '+ data[0].last_name + ' a message?';
 		            var topId = data[0].uid;
 		            var topPic = data[0].pic_big;
 		    	} else {

@@ -20,7 +20,7 @@ body {
 	position: relative;
 	width: 885px;
 	height:583px;
-	background: url('img/wholikes.png') no-repeat left top;
+	background: url('img/wholikes.gif') no-repeat left top;
 }
 
 .facebook-login{
@@ -37,19 +37,23 @@ body {
 	height:16px;
 }
 
+.facebook-connect {
+	display: none;
+}
+
 #result {
 	margin: 100px auto;
 	position: relative;
-	width:692px;
-	height:648px;
-	background: url('img/yourval.png') no-repeat left top;
+	width:812px;
+	height:426px;
+	background: url('img/yourval.gif') no-repeat left top;
 }
 
 .frame{
 	overflow: hidden;
 	position: absolute;
-	left:226px;
-	top:286px;
+	left:434px;
+	top:80px;
 	height:220px;
 }
 
@@ -59,41 +63,48 @@ body {
 
 .text {
 	position: absolute;
-	left:0;
-	top:584px;
-	text-align:center;
-	width:100%;
+	left: 378px;
+	top: 362px;
+	text-align: center;
+	width: 330px;
 	color:#280377;
 	font-size:15px;
 }
 
-.facebook-message{
+.facebook-continue{
 	position: absolute;
-	left:281px;
-	top:620px;
+	left:496px;
+	top:399px;
 }
 
 #message {
 	margin: 100px auto;
 	position: relative;
-	width:837px;
+	width:615px;
 	height:442px;
+	background: url('img/pickmessage.gif') no-repeat left top;
 }
 
-.choose {
-	position: absolute;
-	left:245px;
-	top:12px;
+.menu {
+	position:absolute;
+	left:413px;
+	top:166px;
 }
 
-.left{
-	position: absolute;
-	left:47px;
-	top:195px;
-	text-align: right;
+.menu li{
+	padding-top:10px;
 }
+
+.menu li:hover img.over{ display: block; }
+.menu li:hover img.up{ display: none; }
+
+.menu li img.over{ display: none; }
+.menu li img.up{ display: block; }
+.menu li img.select{display: none;}
+.menu span{display: none;}
 
 .message-container{
+	z-index:-5;
 	position: absolute;
 	left:91px;
 	top:141px;
@@ -111,16 +122,6 @@ body {
 	font-size:18px;
 }
 
-.right{
-	position: absolute;
-	left:697px;
-	top:195px;
-}
-
-.menu{
-	
-}
-
 .facebook-send{
 	position: absolute;
 	left:384px;
@@ -131,7 +132,13 @@ body {
 #happy{
 	margin: 100px auto;
 	position: relative;
-	width:575px;
-	height:503px;
-	background: url('img/happy.png') no-repeat left top;
+	width:798px;
+	height:445px;
+	background: url('img/happy.gif') no-repeat left top;
+}
+
+.facebook-like {
+	position: absolute;
+	left:614px;
+	top:414px;
 }
