@@ -1,15 +1,25 @@
+/*  TODO
+1. change facebook app settings to prod
+2. change name of app
+3. upload to Y&R
+4. remove appspot references
+5. make sure debug set false
+
+*/
+
 //var ROOT_URL = 'http://localhost:8080/'
 var ROOT_URL = 'http://vmlfbval.appspot.com';
 var VALENTINE = '';
 var MESSAGE = '';
 var DEBUG = false;
-var NO_LIKES = false;
 
-var LIKE_DELAY = 750;
+var LIKE_DELAY = 900;
 var FADEIN_DELAY = 200;
 var NO_LIKE_DEALY = 5000;
 
 var TEST;
+var MP3 = false;
+var OGG = false;
 
 window.fbAsyncInit = function() {
     FB.init({
@@ -53,13 +63,21 @@ $(document).ready(function(){
 
     var audioElement = document.createElement('audio');
     if(audioElement.canPlayType('audio/mpeg') == 'maybe' || audioElement.canPlayType('audio/mpeg') == 'probably'){
+        MP3 = true;
+    } else if(audioElement.canPlayType('audio/ogg') == 'maybe' || audioElement.canPlayType('audio/ogg') == 'probably'){
+        OGG = true;
+    }
+    if(OGG || MP3){
         $audioElement = $(audioElement);
-
+        var _src;
+        var _type;
+        if(OGG){ _src = TEST?'sound/test.ogg':'sound/amour.ogg'; _type = 'audio/ogg';}
+        else if(MP3){ _src = TEST?'sound/test.mp3':'sound/amour.mp3'; _type = 'audio/mpeg';}
         $audioElement.attr({
             'volume': '.5',
             'autoplay':'autoplay',
-            'src':TEST?'sound/test.mp3':'sound/amour.mp3',
-            'type':'audio/mpeg'
+            'src': _src,
+            'type': _type
         });
 
         $('#audio-controls .mute').hide();
@@ -93,8 +111,8 @@ function fbLoginStatus(response) {
     if (response.authResponse) {
         console.log("user is already logged in and connected");
         $('.fb-login-button').hide();
-        $('.facebook-connect').click(function(){ countLikes() });
-        $('.facebook-connect').show()
+        $('.welcome-continue').click(function(){ countLikes() });
+        $('.welcome-continue').show()
     }
 }
 
@@ -130,11 +148,13 @@ function countLikes() {
                     topLikers.push(myPosts[i].uid.toString());
             } 
         }
+
+        if(topLikers.length < 1){ topLikers.push(""); }
                 
 		FB.api(
 		    {
 		        method: 'fql.query',
-		        query: 'SELECT uid, first_name, last_name, pic_big FROM user WHERE uid = ' + topLikers[0].toString()
+                query: 'SELECT uid, first_name, last_name, pic_big FROM user WHERE uid = ' + topLikers[0].toString()
 		    },
 		    function(data) {
 		    	if(data.length != 0){
@@ -174,7 +194,11 @@ function setResult(_topName, _topPic){
     $('.name').text(_topName);
     if(!DEBUG){ 
         $('.frame img').attr('src', _topPic).bind('load', function(_e){
-            $('#result').css(
+            if($('#result').css('display') != "none"){
+                $target = $(_e.currentTarget);
+                $target.css('margin-top', 110 - $target.outerHeight()/2);
+            } else {
+                $('#result').css(
                 {
                     'visibility': 'hidden',
                     'position': 'absolute',
@@ -190,7 +214,8 @@ function setResult(_topName, _topPic){
                     'position': 'relative',
                     'display':'none'
                 }
-            );
+            );   
+            }
         });
     } else { //DEBUG ONLY
         $('.frame img').attr('src', topPic).bind('load', function(_e){
@@ -211,7 +236,7 @@ function showLoader(){
         if(_i == $loaderli.length-1){
             window.setTimeout(function(){showHide('#result', '#loader')}, LIKE_DELAY * $loaderli.length);
         }
-    })
+    });
 }
 
 function contactValentine(){
