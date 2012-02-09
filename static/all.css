@@ -15,34 +15,53 @@ body {
 	background: #ffcccc;
 }
 
+#fb-root { position:fixed; top:10%;}
+
+#audio-controls { position:fixed; top:0px; left:0px; background-color: #ffffff; padding-top:2px;}
+
 #welcome {
-	margin: 100px auto;
+	margin: 60px auto;
 	position: relative;
 	width: 885px;
 	height:583px;
 	background: url('img/wholikes.gif') no-repeat left top;
 }
 
-.facebook-login{
+.facebook-connect {
+	display: none;
 	position: absolute;
 	left:696px;
 	top:556px;
+}
+
+.fb-login-button{
+	position: absolute;
+	left:696px;
+	top:556px;
+}
+
+#loader{
+	margin: 300px auto;
+	position: relative;
+	width:650px;
 	height:25px;
 }
 
-.facebook-login a{
-	height:25px;
-}
-.facebook-login span{
-	height:16px;
+#loader ul{
+	width:100%;
 }
 
-.facebook-connect {
+#loader li{
+	float: left;
+	padding-left: 15px;
+}
+
+.hidden {
 	display: none;
 }
 
 #result {
-	margin: 100px auto;
+	margin: 60px auto;
 	position: relative;
 	width:812px;
 	height:426px;
@@ -61,10 +80,20 @@ body {
 	width:220px;
 }
 
+.name{
+	position: absolute;
+	left: 378px;
+	top: 354px;
+	text-align: center;
+	width: 330px;
+	color:#280377;
+	font-size:15px;
+}
+
 .text {
 	position: absolute;
 	left: 378px;
-	top: 362px;
+	top: 377px;
 	text-align: center;
 	width: 330px;
 	color:#280377;
@@ -73,12 +102,12 @@ body {
 
 .facebook-continue{
 	position: absolute;
-	left:496px;
-	top:399px;
+	left: 496px;
+	top: 405px;
 }
 
 #message {
-	margin: 100px auto;
+	margin: 60px auto;
 	position: relative;
 	width:615px;
 	height:442px;
@@ -130,14 +159,14 @@ body {
 
 
 #happy{
-	margin: 100px auto;
+	margin: 60px auto;
 	position: relative;
 	width:798px;
 	height:445px;
 	background: url('img/happy.gif') no-repeat left top;
 }
 
-.facebook-like {
+.fb-like {
 	position: absolute;
 	left:614px;
 	top:414px;

@@ -3,22 +3,41 @@
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 	<title>Who Like, Likes you?</title>
-	<script type="text/javascript" src="jquery-1.7.1.min.js"></script>
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 	<script type="text/javascript" src="vml.js"></script>
 	<link rel="icon" href="favicon.ico" type="image/x-icon">
 	<link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
 	<link type="text/css" rel="stylesheet" media="all" href="all.css" />	
 </head>
 <body>
+	<div id="fb-root"></div>
+	<div id="audio-controls">
+		<img class="mute" src="img/mute.png"/>
+		<img class="unmute" src="img/unmute.png"/>
+	</div>
 	<div id="welcome">
-		<div id="fb-root"><img class="facebook-connect" src="img/connect.png"/><fb:login-button class="facebook-login" size="large" perms="read_stream">Connect</fb:login-button></div>
+		<img class="facebook-connect" src="img/connect.png"/>
+		<div class="fb-login-button" data-show-faces="false" data-width="400" data-max-rows="1"></div>
 	</div>
 	<div id="result">
 		<div class="frame">
 			<img src=""/>
 		</div>
+		<span class="name"></span>
 		<span class="text">Why not send them a message?</span>
 		<img class="facebook-continue" src="img/continue.gif"/>
+	</div>
+	<div id="loader">
+		<ul>
+			<li><img src="img/who.gif"></li>
+			<li class="hidden"><img src="img/like-comma.gif"></li>
+			<li class="hidden"><img src="img/like-comma.gif"></li>
+			<li class="hidden"><img src="img/like-comma.gif"></li>
+			<li class="hidden"><img src="img/like-comma.gif"></li>
+			<li class="hidden"><img src="img/like-comma.gif"></li>
+			<li class="hidden"><img src="img/like-comma.gif"></li>
+			<li class="hidden"><img src="img/likes-you.gif"></li>
+		</ul>
 	</div>
 	<div id="message">
 		<ul class="menu">
@@ -33,7 +52,7 @@
 		</ul>
 	</div>
 	<div id="happy">
-		<img class="facebook-like" src="img/like.gif"/>
+		<div class="fb-like" data-href="http://yr.com/valentine" data-send="false" data-width="450" data-show-faces="true"></div>
 	</div>
 </body>
 </html>
