@@ -21,6 +21,9 @@ var TEST;
 var MP3 = false;
 var OGG = false;
 
+var IMAGE_LOADED = false;
+var LOADER_FINISHED = false;
+
 window.fbAsyncInit = function() {
     FB.init({
       appId      : '374030012622491', // App ID
@@ -124,7 +127,7 @@ function countLikes() {
     var highestCount = 0;
     var topLikers = [];
 	
-	FB.api(
+    FB.api(
     {
         method: 'fql.query',
         query: 'SELECT uid FROM user WHERE uid IN (SELECT likes.friends FROM stream WHERE source_id = me() AND is_hidden = 0 AND created_time > 0 LIMIT 5000)'
@@ -154,43 +157,43 @@ function countLikes() {
 		FB.api(
 		    {
 		        method: 'fql.query',
-                query: 'SELECT uid, first_name, last_name, pic_big FROM user WHERE uid = ' + topLikers[0].toString()
+                        query: 'SELECT uid, first_name, last_name, pic_big FROM user WHERE uid = ' + topLikers[0].toString()
 		    },
 		    function(data) {
-		    	if(data.length != 0){
-		    		var topName = data[0].first_name + ' '+ data[0].last_name + ' liked you ' + highestCount + ' time' + (highestCount > 1?'s':'');
+		    	if(data.length > 0){
+                            var topName = data[0].first_name + ' '+ data[0].last_name + ' liked you ' + highestCount + ' time' + (highestCount > 1?'s':'');
 		            var topPic = data[0].pic_big;
-                    VALENTINE = data[0].uid;
+                            VALENTINE = data[0].uid;
 
-                    setResult(topName, topPic);
+                            setResult(topName, topPic);
 		    	} else {
 		    		var topName = "Yourself.";
-                    $('.text').text('You seem to be the only one who likes your posts. (Well, at least you can give yourself a big old hug!)');
-                    $('.facebook-continue').hide();
-                    var topPic;
-                    FB.api('/me/?fields=picture&type=large', function(response) {
-                        console.log(response);
-                        if(response && response.picture){
-                            topPic = response.picture;
-                        } else {
-                            topPic = "img/test.jpg";
-                        }
+                                $('.text').text('You seem to be the only one who likes your posts. (Well, at least you can give yourself a big old hug!)');
+                                $('.facebook-continue').hide();
+                                var topPic;
+                                FB.api('/me/?fields=picture&type=large', function(response) {
+                                    console.log(response);
+                                    if(response && response.picture){
+                                        topPic = response.picture;
+                                    } else {
+                                        topPic = "img/test.jpg";
+                                    }
 
-                        window.setTimeout(function(){showHide('#happy', '#result')}, LIKE_DELAY * $('#loader li').length + NO_LIKE_DEALY);
-                        setResult(topName, topPic);
-                    });
-		    	}
+                                    window.setTimeout(function(){showHide('#happy', '#result')}, LIKE_DELAY * $('#loader li').length + NO_LIKE_DEALY);
+                                    setResult(topName, topPic);
+                                });
+                        }
 		    	
 		    	console.log(topName);
 		    	
-	        }
-		)
+                    }
+            );
 	});
 }
 
 function setResult(_topName, _topPic){
     _topPic = TEST?'img/test.jpeg':_topPic;
-
+    
     $('.name').text(_topName);
     if(!DEBUG){ 
         $('.frame img').attr('src', _topPic).bind('load', function(_e){
@@ -205,17 +208,23 @@ function setResult(_topName, _topPic){
                     'display':'block'
                 }
             );
-            $target = $(_e.currentTarget);
-            $target.css('margin-top', 110 - $target.outerHeight()/2);
+                $target = $(_e.currentTarget);
+                $target.css('margin-top', 110 - $target.outerHeight()/2);
 
-            $('#result').css(
-                {
-                    'visibility': 'visible',
-                    'position': 'relative',
-                    'display':'none'
-                }
-            );   
+                $('#result').css(
+                    {
+                        'visibility': 'visible',
+                        'position': 'relative',
+                        'display':'none'
+                    }
+                );   
             }
+            
+            
+//            if(LOADER_FINISHED){
+//                showHide("#result","#loader");
+//            }
+            
         });
     } else { //DEBUG ONLY
         $('.frame img').attr('src', topPic).bind('load', function(_e){
@@ -223,33 +232,69 @@ function setResult(_topName, _topPic){
             $target.css('margin-top', 110 - $target.outerHeight()/2);
         });
     }
+    
+    //profile image is now loaded
+    IMAGE_LOADED = true;
+}
+
+function waitForImageLoad(){
+    if(IMAGE_LOADED && LOADER_FINISHED){
+        showHide('#result', '#loader');
+    } else {
+        console.log("waitForImageLoad 100 ms");
+        setTimeout(waitForImageLoad,100);
+    }
 }
 
 function showLoader(){
     showHide('#loader', '#welcome');
-
+    var numLis = 0;
     var $loaderli = $('#loader li');
     $loaderli.each(function(_i, _this){
         $this = $(_this);
         $this.delay(LIKE_DELAY * _i).fadeIn(FADEIN_DELAY);
-
-        if(_i == $loaderli.length-1){
-            window.setTimeout(function(){showHide('#result', '#loader')}, LIKE_DELAY * $loaderli.length);
-        }
+        numLis++;
+//        if(_i == $loaderli.length-1){
+//            window.setTimeout(function(){
+//                showHide('#result', '#loader'); 
+//                }, 
+//            LIKE_DELAY * $loaderli.length);
+//        }
     });
+    
+    var opts = {
+      lines: 12, // The number of lines to draw
+      length: 7, // The length of each line
+      width: 4, // The line thickness
+      radius: 10, // The radius of the inner circle
+      color: '#000', // #rgb or #rrggbb
+      speed: 1, // Rounds per second
+      trail: 60, // Afterglow percentage
+      shadow: false, // Whether to render a shadow
+      hwaccel: false // Whether to use hardware acceleration
+    };
+    var target = document.getElementById('fbStillWaiting');
+    var spinner = new Spinner(opts).spin(target);
+    
+    setTimeout("LOADER_FINISHED = true;",LIKE_DELAY * numLis+1);
+    $('#fbStillWaiting').delay(LIKE_DELAY * numLis+1).fadeIn(FADEIN_DELAY);
+    $('#fbText').delay(LIKE_DELAY * numLis+1).fadeIn(FADEIN_DELAY);
+    
+    //we setup the loader image progression, now let's wait for the FB calls and image load to finish
+    waitForImageLoad();
 }
 
 function contactValentine(){
     console.log('contactValentine()');
 	FB.ui(
-		{
-			method:'send',
-			to: VALENTINE,
-			name: 'You\'re my Facebook Valentine!',
-			link: ROOT_URL, //CHANGE!!!
-            picture: ROOT_URL + 'img/app_icon.gif',
-			description: MESSAGE
-		},
+            {
+                method:'send',
+                to: VALENTINE,
+                name: 'You\'re my Facebook Valentine!',
+                link: ROOT_URL, //CHANGE!!!
+                picture: ROOT_URL + 'img/app_icon.gif',
+                description: MESSAGE
+            },
         function(response) {
             if (response) {
                 console.log('message send!');
