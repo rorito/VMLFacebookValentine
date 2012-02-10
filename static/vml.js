@@ -132,36 +132,6 @@ function fbLoginStatus(response) {
     }
 }
 
-
-//function deepCountLikers(myPosts){
-//    console.log(myPosts);
-//    for(var i=0;i < myPosts.length;i++){
-//        if(myPosts[i].likes){
-//            if(myPosts[i].likes.friends.length > 0){
-//                for(var j=0;j<myPosts[i].likes.friends.length;j++){
-//                    uid = myPosts[i].likes.friends[j];
-                    
-//                    if(user_id_counts.hasOwnProperty(uid)){
-//                        //already has key, increment
-//                        user_id_counts[uid]++;
-//                    } else{
-//                        user_id_counts[uid] = 1;
-//                    }
-                    
-//                    // also keep track of the current highest
-//                    if(user_id_counts[uid] > highestCount){  //new highest count
-//                        topLikers = [];
-//                        highestCount = user_id_counts[uid];
-//                        topLikers.push(uid)
-//                    } else if(user_id_counts[uid] == highestCount){ //more than 1 person with this count
-//                        topLikers.push(uid);
-//                    } 
-//                }
-//            }
-//        }
-//    }
-//}
-
 function countLikes() {
     console.log('countLikes()')
     showLoader();
@@ -234,42 +204,40 @@ function countLikes() {
 		FB.api(
 		    {
 		        method: 'fql.query',
-                        query: 'SELECT uid, first_name, last_name, pic_big FROM user WHERE uid = ' + topLikers[0].toString()
+                query: 'SELECT uid, first_name, last_name, pic_big FROM user WHERE uid = ' + topLikers[0].toString()
 		    },
 		    function(data) {
 		    	if(data.length > 0){
-                            var topName = data[0].first_name + ' '+ data[0].last_name + ' liked you ' + highestCount + ' time' + (highestCount > 1?'s':'');
-		            var topPic = data[0].pic_big;
-                            VALENTINE = data[0].uid;
+                    var topName = data[0].first_name + ' '+ data[0].last_name + ' likes you!';
+                    var topPic = data[0].pic_big;
+                    VALENTINE = data[0].uid;
 
-                            setResult(topName, topPic);
+                    setResult(topName, topPic);
 		    	} else {
 		    		var topName = "Yourself.";
-                                $('.text').text('You seem to be the only one who likes your posts. (Well, at least you can give yourself a big old hug!)');
-                                $('.facebook-continue').hide();
-                                var topPic;
-                                FB.api('/me/?fields=picture&type=large', function(response) {
-                                    console.log(response);
-                                    if(response && response.picture){
-                                        topPic = response.picture;
-                                    } else {
-                                        topPic = "img/test.jpg";
-                                    }
-
-                                    window.setTimeout(function(){showHide('#happy', '#result')}, LIKE_DELAY * $('#loader li').length + NO_LIKE_DEALY);
-                                    setResult(topName, topPic);
-                                });
+                    $('.text').text('You seem to be the only one who likes your posts. (Well, at least you can give yourself a big old hug!)');
+                    $('.facebook-continue').hide();
+                    var topPic;
+                    FB.api('/me/?fields=picture&type=large', function(response) {
+                        console.log(response);
+                        if(response && response.picture){
+                            topPic = response.picture;
+                        } else {
+                            topPic = "img/test.jpg";
                         }
-		    	
-		    	console.log(topName);
-		    	
-                    }
-            );
+
+                        window.setTimeout(function(){showHide('#happy', '#result')}, LIKE_DELAY * $('#loader li').length + NO_LIKE_DEALY);
+                        setResult(topName, topPic);
+                    });
+                }
+		    	console.log(topName + " == " + highestCount);
+            });
 	});
 }
 
 function setResult(_topName, _topPic){
     _topPic = TEST?'img/test.jpeg':_topPic;
+    _topName = TEST?'Nobody.':_topName;
     
     $('.name').text(_topName);
     if(!DEBUG){ 
@@ -295,13 +263,7 @@ function setResult(_topName, _topPic){
                         'display':'none'
                     }
                 );   
-            }
-            
-            
-//            if(LOADER_FINISHED){
-//                showHide("#result","#loader");
-//            }
-            
+            }            
         });
     } else { //DEBUG ONLY
         $('.frame img').attr('src', topPic).bind('load', function(_e){
@@ -310,10 +272,7 @@ function setResult(_topName, _topPic){
         });
     }
     
-    //profile image is now loaded
-//    if(!DEBUG_LIKE_SCREEN){
-        IMAGE_LOADED = true;
-//    }
+    IMAGE_LOADED = true;
 }
 
 function waitForImageLoad(){
@@ -321,46 +280,50 @@ function waitForImageLoad(){
         showHide('#result', '#loader');
     } else {
         console.log("waitForImageLoad 100 ms");
-        setTimeout(waitForImageLoad,100);
+        setTimeout(waitForImageLoad,500);
     }
 }
 
 function showLoader(){
     showHide('#loader', '#welcome');
-    var numLis = 0;
     var $loaderli = $('#loader li');
-    $loaderli.each(function(_i, _this){
-        $this = $(_this);
-        $this.delay(LIKE_DELAY * _i).fadeIn(FADEIN_DELAY);
-        numLis++;
-//        if(_i == $loaderli.length-1){
-//            window.setTimeout(function(){
-//                showHide('#result', '#loader'); 
-//                }, 
-//            LIKE_DELAY * $loaderli.length);
-//        }
-    });
+    resetLoader($loaderli)
     
-    var opts = {
-      lines: 12, // The number of lines to draw
-      length: 7, // The length of each line
-      width: 4, // The line thickness
-      radius: 10, // The radius of the inner circle
-      color: '#000', // #rgb or #rrggbb
-      speed: 1, // Rounds per second
-      trail: 60, // Afterglow percentage
-      shadow: false, // Whether to render a shadow
-      hwaccel: false // Whether to use hardware acceleration
-    };
-    var target = document.getElementById('fbStillWaiting');
-    var spinner = new Spinner(opts).spin(target);
+    // var opts = {
+    //   lines: 12, // The number of lines to draw
+    //   length: 7, // The length of each line
+    //   width: 4, // The line thickness
+    //   radius: 10, // The radius of the inner circle
+    //   color: '#C18EAD', // #rgb or #rrggbb
+    //   speed: 1, // Rounds per second
+    //   trail: 60, // Afterglow percentage
+    //   shadow: false, // Whether to render a shadow
+    //   hwaccel: false // Whether to use hardware acceleration
+    // };
+
+    //var _spinner = new Spinner(opts).spin($('.fbStillWaiting')[0]);
     
-    setTimeout("LOADER_FINISHED = true;",LIKE_DELAY * numLis+1);
-    $('#fbStillWaiting').delay(LIKE_DELAY * numLis+1).fadeIn(FADEIN_DELAY);
-    $('#fbText').delay(LIKE_DELAY * numLis+1).fadeIn(FADEIN_DELAY);
+    //$('.fbStillWaiting').delay(LIKE_DELAY * $loaderli.length+1).fadeIn(FADEIN_DELAY);
+    $('.fbText').delay(LIKE_DELAY * $loaderli.length+1).fadeIn(FADEIN_DELAY);
     
     //we setup the loader image progression, now let's wait for the FB calls and image load to finish
     waitForImageLoad();
+}
+
+function resetLoader(_loaderli){
+    _loaderli.each(function(_i, _this){
+        $this = $(_this);
+        $this.hide();
+        $this.delay(LIKE_DELAY * _i).fadeIn(FADEIN_DELAY);
+    }); 
+
+    window.setTimeout(
+        function(){
+            LOADER_FINISHED = true;
+            resetLoader(_loaderli);
+        },
+        LIKE_DELAY * _loaderli.length+1
+    );
 }
 
 function contactValentine(){

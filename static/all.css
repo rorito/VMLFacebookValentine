@@ -15,12 +15,43 @@ body {
 	background: #ffcccc;
 }
 
+.fb_button .fb_button_text, .fb_button_rtl .fb_button_text {
+	padding-top: 3px !important;
+}
+
 #fb-root { position:fixed; top:10%;}
 
-#audio-controls { position:fixed; top:0px; left:0px; background-color: #ffffff; padding-top:2px;}
+.fb_edge_comment_widget.fb_iframe_widget{
+	top: -138px !important;
+	left: -340px !important;
+	position: absolute;
+	overflow: hidden;
+	height: 126px;
+	border-top: 1px solid;
+	width: 393px;
+}
+
+.fb_edge_comment_widget.fb_iframe_widget iframe{
+	margin-top: -6px !important;
+}
+
+.connect_comment_widget .nub{
+	display: none !important;
+}
+
+#audio-controls { 
+	position:fixed; 
+	top:5px; 
+	left:4px; 
+	/*background-color: #ffffff;*/
+	padding-top:2px;
+	cursor:pointer;
+	width: 40px;
+	height:40px;
+}
 
 #welcome {
-	margin: 60px auto;
+	margin: 20px auto;
 	position: relative;
 	width: 885px;
 	height:583px;
@@ -32,6 +63,7 @@ body {
 	position: absolute;
 	left:696px;
 	top:556px;
+	cursor:pointer;
 }
 
 .fb-login-button{
@@ -40,23 +72,21 @@ body {
 	top:556px;
 }
 
-#fbStillWaiting div {
-    position: relative;
-    left: 50%;
-    top: 50%;
-    margin-top: 15px;
-    text-align: center;
+.fbText {
+	display: none;
+	position: absolute;
+	left: 170px;
+	top: 50px;
+	font-size: 16px;
+	font-style: italic;
+	color: #C18EAD;
 }
-/*
-#fbStillWaiting div {
-    display: inline;
-    margin-top: 15px;
-}*/
 
-#fbText {
-    font-size: 16px;
-    font-style: italic;
-    color: #444;
+.fbStillWaiting {
+	display: none;
+	position: absolute;
+	left: 338px;
+	top: 107px;
 }
 
 #loader{
@@ -64,7 +94,7 @@ body {
 	position: relative;
 	width:650px;
 	height:25px;
-        text-align: center;
+    text-align: center;
 }
 
 #loader ul{
@@ -81,7 +111,7 @@ body {
 }
 
 #result {
-	margin: 60px auto;
+	margin: 50px auto;
 	position: relative;
 	width:812px;
 	height:426px;
@@ -124,6 +154,7 @@ body {
 	position: absolute;
 	left: 496px;
 	top: 405px;
+	cursor:pointer;
 }
 
 #message {
@@ -132,6 +163,7 @@ body {
 	width:615px;
 	height:442px;
 	background: url('img/pickmessage.gif') no-repeat left top;
+	cursor:pointer;
 }
 
 .menu {
@@ -181,9 +213,27 @@ body {
 #happy{
 	margin: 60px auto;
 	position: relative;
-	width:798px;
+	width:875px;
 	height:445px;
 	background: url('img/happy.gif') no-repeat left top;
+}
+
+.vml-link {
+	position: absolute;
+	left: 345px;
+	top: 353px;
+	width:130px;
+	height:55px;
+	cursor: pointer;
+}
+
+.yr-link {
+	position: absolute;
+	left: 489px;
+	top: 353px;
+	width:95px;
+	height:55px;
+	cursor: pointer;
 }
 
 .fb-like {
