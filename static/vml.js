@@ -1,4 +1,7 @@
 /*  TODO
+
+1. figure out how to recall facebook API calls if they time out
+1. test in IE 7+
 1. change facebook app settings to prod
 2. change name of app
 3. upload to Y&R
@@ -12,10 +15,12 @@ var ROOT_URL = 'http://vmlfbval.appspot.com';
 var VALENTINE = '';
 var MESSAGE = '';
 var DEBUG = false;
+var DEBUG_LIKE_SCREEN = false;
 
+var NO_LIKE_DEALY = 5000;
 var LIKE_DELAY = 900;
 var FADEIN_DELAY = 200;
-var NO_LIKE_DEALY = 5000;
+
 
 var TEST;
 var MP3 = false;
@@ -23,6 +28,7 @@ var OGG = false;
 
 var IMAGE_LOADED = false;
 var LOADER_FINISHED = false;
+var clickedFBLoginButton = false;
 
 window.fbAsyncInit = function() {
     FB.init({
@@ -33,7 +39,10 @@ window.fbAsyncInit = function() {
       xfbml      : true,  // parse XFBML
       oauth      : true
     });
-
+    
+    $('.fb-login-button').click(function(){
+        clickedFBLoginButton = true;
+    });
     FB.Event.subscribe('auth.statusChange', fbLoginStatus);
 };
 
@@ -111,13 +120,47 @@ $(document).ready(function(){
 });
 
 function fbLoginStatus(response) {
-    if (response.authResponse) {
+    if(response.authResponse && clickedFBLoginButton){
+        console.log("user originally logged out, had to click FB login button to login");
+        $('.fb-login-button').hide();
+        countLikes();
+    } else if (response.authResponse) {
         console.log("user is already logged in and connected");
         $('.fb-login-button').hide();
         $('.welcome-continue').click(function(){ countLikes() });
         $('.welcome-continue').show()
     }
 }
+
+
+//function deepCountLikers(myPosts){
+//    console.log(myPosts);
+//    for(var i=0;i < myPosts.length;i++){
+//        if(myPosts[i].likes){
+//            if(myPosts[i].likes.friends.length > 0){
+//                for(var j=0;j<myPosts[i].likes.friends.length;j++){
+//                    uid = myPosts[i].likes.friends[j];
+                    
+//                    if(user_id_counts.hasOwnProperty(uid)){
+//                        //already has key, increment
+//                        user_id_counts[uid]++;
+//                    } else{
+//                        user_id_counts[uid] = 1;
+//                    }
+                    
+//                    // also keep track of the current highest
+//                    if(user_id_counts[uid] > highestCount){  //new highest count
+//                        topLikers = [];
+//                        highestCount = user_id_counts[uid];
+//                        topLikers.push(uid)
+//                    } else if(user_id_counts[uid] == highestCount){ //more than 1 person with this count
+//                        topLikers.push(uid);
+//                    } 
+//                }
+//            }
+//        }
+//    }
+//}
 
 function countLikes() {
     console.log('countLikes()')
@@ -130,27 +173,61 @@ function countLikes() {
     FB.api(
     {
         method: 'fql.query',
-        query: 'SELECT uid FROM user WHERE uid IN (SELECT likes.friends FROM stream WHERE source_id = me() AND is_hidden = 0 AND created_time > 0 LIMIT 5000)'
+        //AND created_time < '+ Math.round(new Date().getTime() / 1000) +' 
+        //query: "SELECT message, likes.friends FROM stream WHERE filter_key = 'others' LIMIT 5000"   //only others
+        query: 'SELECT likes.friends FROM stream WHERE source_id = me() AND is_hidden = 0 LIMIT 5000'
+        //query: 'SELECT uid FROM user WHERE uid IN (SELECT likes.friends FROM stream WHERE source_id = me() AND is_hidden = 0 AND created_time > 0 LIMIT 5000)'
     }, 
     function(myPosts) {
-        console.log('countLikes() - callback')
-        for(var i=0;i < myPosts.length;i++){
-            if(user_id_counts.hasOwnProperty(myPosts[i].uid.toString())){
-                //already has key, increment
-                user_id_counts[myPosts[i].uid.toString()]++;
-            } else{
-                user_id_counts[myPosts[i].uid.toString()] = 1;
-            }
+//        console.log('countLikes() - callback, num posts: ' + myPosts.length);
+//        console.log(myPosts);
+//        for(var i=0;i < myPosts.length;i++){
+//            //console.log(myPosts[i]);
+//            //console.log(myPosts[i].uid);
+//            if(user_id_counts.hasOwnProperty(myPosts[i].uid.toString())){
+//                //already has key, increment
+//                user_id_counts[myPosts[i].uid.toString()]++;
+//            } else{
+//                user_id_counts[myPosts[i].uid.toString()] = 1;
+//            }
             
-            // also keep track of the current highest
-            if(user_id_counts[myPosts[i].uid.toString()] > highestCount){  //new highest count
-                    topLikers = [];
-                    highestCount = user_id_counts[myPosts[i].uid.toString()];
-                    topLikers.push(myPosts[i].uid.toString())
-            } else if(user_id_counts[myPosts[i].uid.toString()] == highestCount){ //more than 1 person with this count
-                    topLikers.push(myPosts[i].uid.toString());
-            } 
+//            // also keep track of the current highest
+//            if(user_id_counts[myPosts[i].uid.toString()] > highestCount){  //new highest count
+//                    topLikers = [];
+//                    highestCount = user_id_counts[myPosts[i].uid.toString()];
+//                    topLikers.push(myPosts[i].uid.toString())
+//            } else if(user_id_counts[myPosts[i].uid.toString()] == highestCount){ //more than 1 person with this count
+//                    topLikers.push(myPosts[i].uid.toString());
+//            } 
+//        }
+        var uid = "";
+        console.log(myPosts);
+        for(var i=0;i < myPosts.length;i++){
+            if(myPosts[i].likes){
+                if(myPosts[i].likes.friends.length > 0){
+                    for(var j=0;j<myPosts[i].likes.friends.length;j++){
+                        uid = myPosts[i].likes.friends[j];
+                        
+                        if(user_id_counts.hasOwnProperty(uid)){
+                            //already has key, increment
+                            user_id_counts[uid]++;
+                        } else{
+                            user_id_counts[uid] = 1;
+                        }
+                        
+                        // also keep track of the current highest
+                        if(user_id_counts[uid] > highestCount){  //new highest count
+                            topLikers = [];
+                            highestCount = user_id_counts[uid];
+                            topLikers.push(uid)
+                        } else if(user_id_counts[uid] == highestCount){ //more than 1 person with this count
+                            topLikers.push(uid);
+                        } 
+                    }
+                }
+            }
         }
+        
 
         if(topLikers.length < 1){ topLikers.push(""); }
                 
@@ -234,7 +311,9 @@ function setResult(_topName, _topPic){
     }
     
     //profile image is now loaded
-    IMAGE_LOADED = true;
+//    if(!DEBUG_LIKE_SCREEN){
+        IMAGE_LOADED = true;
+//    }
 }
 
 function waitForImageLoad(){

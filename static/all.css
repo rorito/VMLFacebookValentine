@@ -41,9 +41,17 @@ body {
 }
 
 #fbStillWaiting div {
+    position: relative;
+    left: 50%;
+    top: 50%;
+    margin-top: 15px;
+    text-align: center;
+}
+/*
+#fbStillWaiting div {
     display: inline;
     margin-top: 15px;
-}
+}*/
 
 #fbText {
     font-size: 16px;
