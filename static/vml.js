@@ -31,13 +31,14 @@ var FADEIN_DELAY = 200;
 
 
 
-var TEST;
+var TEST = false;
 var MP3 = false;
 var OGG = false;
 
 var IMAGE_LOADED = false;
 var LOADER_FINISHED = false;
 var clickedFBLoginButton = false;
+var TIMEDOUT = false;
 
 // window.fbAsyncInit = function() {
 //     FB.init({
@@ -71,6 +72,7 @@ $(document).ready(function(){
         contactValentine();
     });
 
+    if(document.location.href.split('?').length > 1 && document.location.href.split('?')[1].match('timeout')){TIMEDOUT = true;}
     if(document.location.href.split('?').length > 1 && document.location.href.split('?')[1].match('Gsj7pMbMpSQ')){TEST = true;}
 
     if(!DEBUG){
@@ -133,6 +135,10 @@ $(document).ready(function(){
 });
 
 function fbLoginStatus(response) {
+    if(TIMEDOUT){
+        clickedFBLoginButton = true;
+    }
+
     if(response.authResponse && clickedFBLoginButton){
         //console.log("user originally logged out, had to click FB login button to login");
         $('.fb-login-button').hide();
