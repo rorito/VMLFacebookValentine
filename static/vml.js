@@ -29,6 +29,7 @@ var NO_LIKE_DEALY = 5000;
 var LIKE_DELAY = 900;
 var FADEIN_DELAY = 200;
 
+var globalTimeout = 45000;
 
 
 var TEST = false;
@@ -370,7 +371,7 @@ function waitForImageLoad(){
 
 function showLoader(){
     //set a timeout to catch facebook api timeouts
-    //window.setTimeout(onTimeout,10000);
+    window.setTimeout(onTimeout,globalTimeout);
     
     showHide('#loader', '#welcome');
     var $loaderli = $('#loader li');

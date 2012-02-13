@@ -75,11 +75,12 @@ body {
 .fbText {
 	display: none;
 	position: absolute;
-	left: 170px;
+	left: 0px;
 	top: 50px;
 	font-size: 16px;
 	font-style: italic;
 	color: #C18EAD;
+        text-align: center;
 }
 
 .fbStillWaiting {
