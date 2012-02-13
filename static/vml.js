@@ -12,16 +12,10 @@ different one each time if ties
 4. remove appspot references
 5. make sure debug set false
 
-
-    // try page instead of stream   
     //try to get both filter_key others and filter_key owner   
         //don't use is_hidden
         //permissions   friends_likes     user_likes     offline_access    read_stream
-        
-    //add permission user_likes and offline_access !!!!!!!!!!!!!!!!!
     //http://stackoverflow.com/questions/3211037/get-users-facebook-likes-with-fql
-    
-    //write test to get all posts, then look at graph api for pictures, posts, etc and make sure not missing any
 */
 
 //var ROOT_URL = 'http://localhost:8080/'
@@ -272,45 +266,8 @@ function countPostLikes(){
 function countLikes() {
     console.log('countLikes()')
     showLoader();
-
-//    FB.api('/me/permissions', function (response) {
-//        console.log(response);
-//    } );
-
 	
     countPostLikes();
-    
-
-    
-
-        
-        //console.log(myPosts);
-//        for(var i=0;i < myPosts.length;i++){
-//            if(myPosts[i].likes){
-//                if(myPosts[i].likes.friends.length > 0){
-//                    for(var j=0;j<myPosts[i].likes.friends.length;j++){
-//                        uid = myPosts[i].likes.friends[j];
-                        
-//                        if(user_id_counts.hasOwnProperty(uid)){
-//                            //already has key, increment
-//                            user_id_counts[uid]++;
-//                        } else{
-//                            user_id_counts[uid] = 1;
-//                        }
-                        
-//                        // also keep track of the current highest
-//                        if(user_id_counts[uid] > highestCount){  //new highest count
-//                            topLikers = [];
-//                            highestCount = user_id_counts[uid];
-//                            topLikers.push(uid)
-//                        } else if(user_id_counts[uid] == highestCount){ //more than 1 person with this count
-//                            topLikers.push(uid);
-//                        } 
-//                    }
-//                }
-//            }
-//        }
-        
 }
 
 function parseTopLikers(){
@@ -353,7 +310,11 @@ function parseTopLikers(){
 }
 
 
-
+//function getPermissions(){
+////    FB.api('/me/permissions', function (response) {
+////        console.log(response);
+////    } );    
+//}
 
 
 function setResult(_topName, _topPic){
