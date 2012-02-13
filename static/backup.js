@@ -1,10 +1,10 @@
 
 // original collect likes
-//        console.log('countLikes() - callback, num posts: ' + myPosts.length);
-//        console.log(myPosts);
+//        //console.log('countLikes() - callback, num posts: ' + myPosts.length);
+//        //console.log(myPosts);
 //        for(var i=0;i < myPosts.length;i++){
-//            //console.log(myPosts[i]);
-//            //console.log(myPosts[i].uid);
+//            ////console.log(myPosts[i]);
+//            ////console.log(myPosts[i].uid);
 //            if(user_id_counts.hasOwnProperty(myPosts[i].uid.toString())){
 //                //already has key, increment
 //                user_id_counts[myPosts[i].uid.toString()]++;
@@ -42,8 +42,8 @@
 //    }, 
 //    function(myPosts) {
 //        var uid = "";
-//        console.log("myposts fql: " + myPosts.length);
-//        console.log(myPosts);
+//        //console.log("myposts fql: " + myPosts.length);
+//        //console.log(myPosts);
         
 //        var idString = "";
 //        for(var i=0;i<myPosts.length;i++){
@@ -52,13 +52,13 @@
 //        //remove last comma
 //        idString = idString.slice(0, -1);
         
-//        console.log(idString);
+//        //console.log(idString);
         
         
 //        //test
 //        FB.api("/likes?ids="+idString,function(response){
-//            console.log("/likes/?ids");
-//            //console.log(response);
+//            //console.log("/likes/?ids");
+//            ////console.log(response);
             
 //            for (var key in response) {
 //              if (response.hasOwnProperty(key)) {
@@ -101,7 +101,7 @@
     
 
         
-        //console.log(myPosts);
+        ////console.log(myPosts);
 //        for(var i=0;i < myPosts.length;i++){
 //            if(myPosts[i].likes){
 //                if(myPosts[i].likes.friends.length > 0){

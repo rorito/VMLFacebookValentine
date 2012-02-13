@@ -39,28 +39,28 @@ var IMAGE_LOADED = false;
 var LOADER_FINISHED = false;
 var clickedFBLoginButton = false;
 
-window.fbAsyncInit = function() {
-    FB.init({
-      appId      : '374030012622491', // App ID
-      channelUrl : 'http://vmlfbval.appspot.com/channel.html', // Channel File
-      status     : true, // check login status
-      cookie     : true, // enable cookies to allow the server to access the session
-      xfbml      : true,  // parse XFBML
-      oauth      : true
-    });
+// window.fbAsyncInit = function() {
+//     FB.init({
+//       appId      : '374030012622491', // App ID
+//       channelUrl : window.location.protocol + "//" + window.location.hostname + ":" + window.location.port + "/channel.html", // Channel File
+//       status     : true, // check login status
+//       cookie     : true, // enable cookies to allow the server to access the session
+//       xfbml      : true,  // parse XFBML
+//       oauth      : true
+//     });
     
-    $('.fb-login-button').click(function(){
-        clickedFBLoginButton = true;
-    });
-    FB.Event.subscribe('auth.statusChange', fbLoginStatus);
-};
+//     $('.fb-login-button').click(function(){
+//         clickedFBLoginButton = true;
+//     });
+//     FB.Event.subscribe('auth.statusChange', fbLoginStatus);
+// };
 
-(function(d){
-    var js, id = 'facebook-jssdk'; if (d.getElementById(id)) {return;}
-    js = d.createElement('script'); js.id = id; js.async = true;
-    js.src = "//connect.facebook.net/en_US/all.js";
-    d.getElementsByTagName('head')[0].appendChild(js);
-}(document));
+// (function(d){
+//     var js, id = 'facebook-jssdk'; if (d.getElementById(id)) {return;}
+//     js = d.createElement('script'); js.id = id; js.async = true;
+//     js.src = ;
+//     d.getElementsByTagName('head')[0].appendChild(js);
+// }(document));
 
 $(document).ready(function(){
     //setup button listeners
@@ -81,48 +81,52 @@ $(document).ready(function(){
 
         $('body').css('overflow-x', 'hidden');
     }
+    
+    if(navigator.appName != 'Microsoft Internet Explorer'){
+        var audioElement = document.createElement('audio');
+        if(audioElement.canPlayType('audio/mpeg') == 'maybe' || audioElement.canPlayType('audio/mpeg') == 'probably'){
+            MP3 = true;
+        } else if(audioElement.canPlayType('audio/ogg') == 'maybe' || audioElement.canPlayType('audio/ogg') == 'probably'){
+            OGG = true;
+        }
+        if(OGG || MP3){
+            $audioElement = $(audioElement);
+            var _src;
+            var _type;
+            if(OGG){ _src = TEST?'sound/test.ogg':'sound/amour_final.ogg'; _type = 'audio/ogg';}
+            else if(MP3){ _src = TEST?'sound/test.mp3':'sound/amour_final.mp3'; _type = 'audio/mpeg';}
+            $audioElement.attr({
+                'volume': '.5',
+                'autoplay':'autoplay',
+                'src': _src,
+                'type': _type
+            });
 
-    var audioElement = document.createElement('audio');
-    if(audioElement.canPlayType('audio/mpeg') == 'maybe' || audioElement.canPlayType('audio/mpeg') == 'probably'){
-        MP3 = true;
-    } else if(audioElement.canPlayType('audio/ogg') == 'maybe' || audioElement.canPlayType('audio/ogg') == 'probably'){
-        OGG = true;
-    }
-    if(OGG || MP3){
-        $audioElement = $(audioElement);
-        var _src;
-        var _type;
-        if(OGG){ _src = TEST?'sound/test.ogg':'sound/amour_final.ogg'; _type = 'audio/ogg';}
-        else if(MP3){ _src = TEST?'sound/test.mp3':'sound/amour_final.mp3'; _type = 'audio/mpeg';}
-        $audioElement.attr({
-            'volume': '.5',
-            'autoplay':'autoplay',
-            'src': _src,
-            'type': _type
-        });
+            $('#audio-controls .mute').hide();
 
-        $('#audio-controls .mute').hide();
+            $('#audio-controls').click(function(){
+                if(audioElement.paused){
+                    $('#audio-controls .mute').hide();
+                    $('#audio-controls .unmute').show();
+                    audioElement.play();
+                } else {
+                    $('#audio-controls .mute').show();
+                    $('#audio-controls .unmute').hide();
+                    audioElement.pause();
+                }
+            });
 
-        $('#audio-controls').click(function(){
-            if(audioElement.paused){
-                $('#audio-controls .mute').hide();
-                $('#audio-controls .unmute').show();
+            audioElement.addEventListener('ended', function(){
+                //console.log('audio ended')
+                audioElement.src = TEST?'sound/test.mp3':'sound/amour_final.mp3';
                 audioElement.play();
-            } else {
-                $('#audio-controls .mute').show();
-                $('#audio-controls .unmute').hide();
-                audioElement.pause();
-            }
-        });
-
-        audioElement.addEventListener('ended', function(){
-            console.log('audio ended')
-            audioElement.src = TEST?'sound/test.mp3':'sound/amour_final.mp3';
-            audioElement.play();
-        });
+            });
 
 
-        $('body').append(audioElement);
+            $('body').append(audioElement);
+        } else {
+            $('#audio-controls').hide();
+        }
     } else {
         $('#audio-controls').hide();
     }
@@ -130,11 +134,11 @@ $(document).ready(function(){
 
 function fbLoginStatus(response) {
     if(response.authResponse && clickedFBLoginButton){
-        console.log("user originally logged out, had to click FB login button to login");
+        //console.log("user originally logged out, had to click FB login button to login");
         $('.fb-login-button').hide();
         countLikes();
     } else if (response.authResponse) {
-        console.log("user is already logged in and connected");
+        //console.log("user is already logged in and connected");
         $('.fb-login-button').hide();
         $('.welcome-continue').click(function(){ countLikes() });
         $('.welcome-continue').show()
@@ -168,7 +172,7 @@ function addUserTrackHighest(uid){
 
 function collateLikes(myPosts){
     var uid = "";
-    console.log("collateLikes: num of posts - " + myPosts.data.length);
+    //console.log("collateLikes: num of posts - " + myPosts.data.length);
     var likesArr = [];
     
     if(myPosts.data && myPosts.data.length > 0){
@@ -187,21 +191,21 @@ function collateLikes(myPosts){
         }
     }
 
-    console.log("collateLikes: num of posts with likes - " + postsWithLikes);
-    console.log("collateLikes: total likes - " + totalPostLikes);
+    //console.log("collateLikes: num of posts with likes - " + postsWithLikes);
+    //console.log("collateLikes: total likes - " + totalPostLikes);
 }
 
 function countAlbumLikes(){    
     //get likes for the album itself
-     console.log("countAlbumLikes()");
+     //console.log("countAlbumLikes()");
     FB.api(
         {
             method: 'fql.query',
             query: 'select user_id from like where object_id IN (select object_id from album WHERE owner=me() LIMIT 25)'
         },
         function(data) {
-            console.log("countAlbumLikes(): " + data.length);
-            //console.log(data);
+            //console.log("countAlbumLikes(): " + data.length);
+            ////console.log(data);
             for(var i=0;i<data.length;i++){
                 if(data[i].hasOwnProperty("user_id")){
                     addUserTrackHighest(data[i]["user_id"]);
@@ -221,18 +225,18 @@ function countPhotoLikes(){
             query: 'select user_id, object_id from like where object_id in (select object_id from photo WHERE aid IN (select aid from album WHERE owner=me() LIMIT 25))'
         },
         function(data) {
-            console.log("countPhotoLikes(): " + data.length) ;
-            //console.log(data);
+            //console.log("countPhotoLikes(): " + data.length) ;
+            ////console.log(data);
             for(var i=0;i<data.length;i++){
                 if(data[i].hasOwnProperty("user_id")){
                     addUserTrackHighest(data[i]["user_id"]);
                 }
             }
             
-            console.log("done");
-            console.log(topLikers);
-            console.log("highest: " + highestCount);
-            //console.log(user_id_counts);
+            //console.log("done");
+            //console.log(topLikers);
+            //console.log("highest: " + highestCount);
+            ////console.log(user_id_counts);
             
             parseTopLikers();
         }
@@ -241,7 +245,7 @@ function countPhotoLikes(){
 
 function countPostLikes(){
     FB.api('/me/posts&limit=1000', function(response) {
-        console.log("countPostLikes()");
+        //console.log("countPostLikes()");
         collateLikes(response);
         
         countAlbumLikes();
@@ -249,7 +253,7 @@ function countPostLikes(){
 }
 
 function countLikes() {
-    console.log('countLikes()')
+    //console.log('countLikes()')
     showLoader();
 	
     countPostLikes();
@@ -265,7 +269,7 @@ function parseTopLikers(){
     },
     function(data) {
         if(data.length > 0){
-            var topName = data[0].first_name + ' '+ data[0].last_name + ' likes you!';
+            var topName = data[0].first_name + ' '+ data[0].last_name + ' liked you ' + highestCount +' times!';
             var topPic = data[0].pic_big;
             VALENTINE = data[0].uid;
 
@@ -276,7 +280,7 @@ function parseTopLikers(){
             $('.facebook-continue').hide();
             var topPic;
             FB.api('/me/?fields=picture&type=large', function(response) {
-                console.log(response);
+                //console.log(response);
                 if(response && response.picture){
                     topPic = response.picture;
                 } else {
@@ -287,7 +291,7 @@ function parseTopLikers(){
                 setResult(topName, topPic);
             });
         }
-    console.log(topName + " == " + highestCount);
+    //console.log(topName + " == " + highestCount);
     }
     );
 }
@@ -295,7 +299,7 @@ function parseTopLikers(){
 
 //function getPermissions(){
 ////    FB.api('/me/permissions', function (response) {
-////        console.log(response);
+////        //console.log(response);
 ////    } );    
 //}
 
@@ -344,7 +348,7 @@ function waitForImageLoad(){
     if(IMAGE_LOADED && LOADER_FINISHED){
         showHide('#result', '#loader');
     } else {
-        console.log("waitForImageLoad");
+        //console.log("waitForImageLoad");
         setTimeout(waitForImageLoad,500);
     }
 }
@@ -392,7 +396,7 @@ function resetLoader(_loaderli){
 }
 
 function contactValentine(){
-    console.log('contactValentine()');
+    //console.log('contactValentine()');
 	FB.ui(
             {
                 method:'send',
@@ -404,17 +408,17 @@ function contactValentine(){
             },
         function(response) {
             if (response) {
-                console.log('message send!');
+                //console.log('message send!');
                 showHide('#happy', '#message');
             } else {
-                console.log('message NOT send!');
+                //console.log('message NOT send!');
             }
         }
 	);			
 }
 
 function showHide(_show, _hide){
-    //console.log('showHide(' + _show + ', ' + _hide + ')');
+    ////console.log('showHide(' + _show + ', ' + _hide + ')');
     if(!DEBUG){
         $(_hide).hide();
         $(_show).fadeIn(FADEIN_DELAY); 

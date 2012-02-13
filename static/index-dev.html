@@ -95,7 +95,7 @@
                                 }
                                 
                                 if(j ==0){
-                                    console.log("Total time: " + (new Date().getTime() - start));
+                                    //console.log("Total time: " + (new Date().getTime() - start));
                                     var topName = topLikersInfo[0].first_name + ' '+ topLikersInfo[0].last_name;
                                     var topId = topLikersInfo[0].uid;
                                     
@@ -134,14 +134,14 @@
 
             if (response.authResponse) {
                 //user is already logged in and connected
-                    console.log("user is already logged in and connected");
+                    //console.log("user is already logged in and connected");
                     countLikes();
             } else {
                 //user is not connected to your app or logged out
-                console.log("user not connected to app or logged out");
+                //console.log("user not connected to app or logged out");
                 button.innerHTML = 'Login';
                 button.onclick = function() {
-                    console.log("button.onclick");
+                    //console.log("button.onclick");
                     showLoader(true);
                     FB.login(function(response) {
                         if (response.authResponse) {

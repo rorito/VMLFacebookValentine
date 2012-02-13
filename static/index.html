@@ -5,13 +5,12 @@
 	<title>Who Like, Likes you?</title>
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 	<script type="text/javascript" src="vml.js"></script>
-        	<script type="text/javascript" src="spin.js"></script>
+    <script type="text/javascript" src="spin.js"></script>
 	<link rel="icon" href="favicon.ico" type="image/x-icon">
 	<link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
 	<link type="text/css" rel="stylesheet" media="all" href="all.css" />	
 </head>
 <body>
-	<div id="fb-root"></div>
 	<div id="audio-controls">
 		<img class="mute" src="img/mute.png"/>
 		<img class="unmute" src="img/unmute.png"/>
@@ -59,5 +58,22 @@
 		<a href="http://www.yr.com" class="yr-link"></a>
 		<div class="fb-like" data-href="http://yr.com/valentine" data-send="false" data-width="450" data-show-faces="false"></div>
 	</div>
+	<div id="fb-root"></div>
+	<script src="//connect.facebook.net/en_US/all.js"></script>
+	<script>
+		    FB.init({
+		      appId      : '374030012622491', // App ID
+		      channelUrl : window.location.protocol + "//" + window.location.hostname + ":" + window.location.port + "/channel.html", // Channel File
+		      status     : true, // check login status
+		      cookie     : true, // enable cookies to allow the server to access the session
+		      xfbml      : true,  // parse XFBML
+		      oauth      : true
+		    });
+		    
+		    $('.fb-login-button').click(function(){
+		        clickedFBLoginButton = true;
+		    });
+		    FB.Event.subscribe('auth.statusChange', fbLoginStatus);
+	</script>
 </body>
 </html>

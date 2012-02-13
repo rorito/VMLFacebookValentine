@@ -36,7 +36,7 @@ $(document).ready(function(){
 
 function fbLoginStatus(response) {
     if (response.authResponse) {
-        console.log("user is already logged in and connected");
+        //console.log("user is already logged in and connected");
         $('.fb-login-button').hide();
         $('.continue-button').click(function(){ countLikes() });
         $('.continue-button').show()
@@ -44,7 +44,7 @@ function fbLoginStatus(response) {
 }
 
 function countLikes() {
-    console.log('countLikes()')
+    //console.log('countLikes()')
     var user_id_counts = {};
     var highestCount = 0;
     var topLikers = [];
@@ -56,7 +56,7 @@ function countLikes() {
         query: 'SELECT uid FROM user WHERE uid IN (SELECT likes.friends FROM stream WHERE source_id = me() AND is_hidden = 0 AND created_time > 0 LIMIT 5000)'
     }, 
     function(myPosts) {
-        console.log('countLikes() - callback')
+        //console.log('countLikes() - callback')
         for(var i=0;i < myPosts.length;i++){
             if(user_id_counts.hasOwnProperty(myPosts[i].uid.toString())){
                 //already has key, increment
@@ -91,7 +91,7 @@ function countLikes() {
                         var topPic = "img/" + Math.round(Math.random()*3) + ".jpeg";
                 }
                 
-                console.log(topName);
+                //console.log(topName);
                 VALENTINE = data[0].uid;
                         
                 $('.frame img').hide().attr('src', topPic).bind('load', function(_e){
