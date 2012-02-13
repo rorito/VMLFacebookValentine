@@ -5,7 +5,6 @@ enable sound
 different one each time if ties
 1. figure out how to recall facebook API calls if they time out
 1. check permissions
-1. test in IE 7+
 1. change facebook app settings to prod
 2. change name of app
 3. upload to Y&R
@@ -19,7 +18,8 @@ different one each time if ties
 */
 
 //var ROOT_URL = 'http://localhost:8080/'
-var ROOT_URL = 'http://vmlfbval.appspot.com';
+//var ROOT_URL = 'http://vmlfbval.appspot.com';
+var ROOT_URL = 'http://www.wholikelikesyou.com';
 var VALENTINE = '';
 var MESSAGE = '';
 var DEBUG = false;
