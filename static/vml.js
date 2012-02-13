@@ -17,9 +17,9 @@ different one each time if ties
     //http://stackoverflow.com/questions/3211037/get-users-facebook-likes-with-fql
 */
 
-//var ROOT_URL = 'http://localhost:8080/'
+var ROOT_URL = 'http://localhost:8080/'
 //var ROOT_URL = 'http://vmlfbval.appspot.com';
-var ROOT_URL = 'http://www.wholikelikesyou.com';
+//var ROOT_URL = 'http://www.wholikelikesyou.com';
 var VALENTINE = '';
 var MESSAGE = '';
 var DEBUG = false;
@@ -133,6 +133,14 @@ $(document).ready(function(){
         $('#audio-controls').hide();
     }
 });
+
+//function onTimeout(){
+//    console.log("ontimeout");
+//    $('.fbText').text("There was an error accessing Facebook. Let's try again");
+//    window.setTimeout(funtion() {
+//            window.location.href = document.location.href+"?timeout";
+//    }, 3000);
+//}
 
 function fbLoginStatus(response) {
     if(TIMEDOUT){
@@ -347,7 +355,7 @@ function setResult(_topName, _topPic){
         });
     }
     
-    IMAGE_LOADED = true;
+    //IMAGE_LOADED = true;
 }
 
 function waitForImageLoad(){
@@ -360,6 +368,9 @@ function waitForImageLoad(){
 }
 
 function showLoader(){
+    //set a timeout to catch facebook api timeouts
+    //window.setTimeout(onTimeout,10000);
+    
     showHide('#loader', '#welcome');
     var $loaderli = $('#loader li');
     resetLoader($loaderli)
