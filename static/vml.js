@@ -18,8 +18,8 @@ different one each time if ties
 */
 
 //var ROOT_URL = 'http://localhost:8080/'
-var ROOT_URL = 'http://vmlfbval.appspot.com';
-//var ROOT_URL = 'http://www.wholikelikesyou.com';
+//var ROOT_URL = 'http://vmlfbval.appspot.com';
+var ROOT_URL = 'http://www.wholikelikesyou.com';
 var VALENTINE = '';
 var MESSAGE = '';
 var DEBUG = false;
@@ -136,7 +136,6 @@ $(document).ready(function(){
 });
 
 function onTimeout(){
-    console.log("ontimeout");
     $('.fbText').text("Wow, post much? Our little search-bot is exhausted! Click refresh to try again.");
 //    window.setTimeout(funtion() {
 //            window.location.href = document.location.href+"?timeout";
@@ -220,15 +219,21 @@ function countAlbumLikes(){
             query: 'select user_id from like where object_id IN (select object_id from album WHERE owner=me() LIMIT 25)'
         },
         function(data) {
-            //console.log("countAlbumLikes(): " + data.length);
-            ////console.log(data);
-            for(var i=0;i<data.length;i++){
-                if(data[i].hasOwnProperty("user_id")){
-                    addUserTrackHighest(data[i]["user_id"]);
+            if(data && data.length > 0){
+                                //console.log("countAlbumLikes(): " + data.length);
+                ////console.log(data);
+                for(var i=0;i<data.length;i++){
+                    if(data[i].hasOwnProperty("user_id")){
+                        addUserTrackHighest(data[i]["user_id"]);
+                    }
                 }
-            }
+                
+                countPhotoLikes();
             
-            countPhotoLikes();
+            } else {
+                onTimeout();
+            }
+
         }
     );
 }
@@ -241,20 +246,24 @@ function countPhotoLikes(){
             query: 'select user_id, object_id from like where object_id in (select object_id from photo WHERE aid IN (select aid from album WHERE owner=me() LIMIT 25))'
         },
         function(data) {
-            //console.log("countPhotoLikes(): " + data.length) ;
-            ////console.log(data);
-            for(var i=0;i<data.length;i++){
-                if(data[i].hasOwnProperty("user_id")){
-                    addUserTrackHighest(data[i]["user_id"]);
+            if(data && data.length > 0){
+                //console.log("countPhotoLikes(): " + data.length) ;
+                ////console.log(data);
+                for(var i=0;i<data.length;i++){
+                    if(data[i].hasOwnProperty("user_id")){
+                        addUserTrackHighest(data[i]["user_id"]);
+                    }
                 }
+                
+                //console.log("done");
+                //console.log(topLikers);
+                //console.log("highest: " + highestCount);
+                ////console.log(user_id_counts);
+                
+                parseTopLikers();
+            } else {
+                onTimeout();
             }
-            
-            //console.log("done");
-            //console.log(topLikers);
-            //console.log("highest: " + highestCount);
-            ////console.log(user_id_counts);
-            
-            parseTopLikers();
         }
     );
 }
@@ -262,9 +271,12 @@ function countPhotoLikes(){
 function countPostLikes(){
     FB.api('/me/posts&limit=1000', function(response) {
         //console.log("countPostLikes()");
-        collateLikes(response);
-        
-        countAlbumLikes();
+        if(response.data && response.data.length > 0){
+            collateLikes(response);
+            countAlbumLikes();
+        } else {
+            onTimeout();
+        }
     });    
 }
 
@@ -357,7 +369,7 @@ function setResult(_topName, _topPic){
         });
     }
     
-    //IMAGE_LOADED = true;
+    IMAGE_LOADED = true;
 }
 
 function waitForImageLoad(){
