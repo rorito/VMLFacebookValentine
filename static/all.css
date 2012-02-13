@@ -22,11 +22,11 @@ body {
 #fb-root { position:fixed; top:10%;}
 
 .fb_edge_comment_widget.fb_iframe_widget{
-	top: -138px !important;
+	top: -162px !important;
 	left: -340px !important;
 	position: absolute;
 	overflow: hidden;
-	height: 126px;
+	height: 156px;
 	border-top: 1px solid;
 	width: 393px;
 }
@@ -55,7 +55,7 @@ body {
 	position: relative;
 	width: 885px;
 	height:583px;
-	background: url('img/wholikes.gif') no-repeat left top;
+	background: url('img/wholikes.png') no-repeat left top;
 }
 
 .welcome-continue {
@@ -79,7 +79,7 @@ body {
 	top: 50px;
 	font-size: 16px;
 	font-style: italic;
-	color: #C18EAD;
+	color: #ad86a1;
         text-align: center;
         width:100%;
 }
@@ -156,7 +156,14 @@ body {
 
 .facebook-continue{
 	position: absolute;
-	left: 496px;
+	left: 446px;
+	top: 405px;
+	cursor:pointer;
+}
+
+.facebook-nothanks{
+	position: absolute;
+	left: 546px;
 	top: 405px;
 	cursor:pointer;
 }
