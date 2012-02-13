@@ -117,7 +117,7 @@ $(document).ready(function(){
 
         audioElement.addEventListener('ended', function(){
             console.log('audio ended')
-            audioElement.src = TEST?'sound/test.mp3':'sound/amour.mp3';
+            audioElement.src = TEST?'sound/test.mp3':'sound/amour_final.mp3';
             audioElement.play();
         });
 
@@ -197,10 +197,11 @@ function countAlbumLikes(){
     FB.api(
         {
             method: 'fql.query',
-            query: 'select user_id from like where object_id IN (select object_id from album WHERE owner=me() LIMIT 500)'
+            query: 'select user_id from like where object_id IN (select object_id from album WHERE owner=me() LIMIT 25)'
         },
         function(data) {
             console.log("countAlbumLikes(): " + data.length);
+            //console.log(data);
             for(var i=0;i<data.length;i++){
                 if(data[i].hasOwnProperty("user_id")){
                     addUserTrackHighest(data[i]["user_id"]);
@@ -217,10 +218,11 @@ function countPhotoLikes(){
     FB.api(
         {
             method: 'fql.query',
-            query: 'select user_id, object_id from like where object_id in (select object_id from photo WHERE aid IN (select aid from album WHERE owner=me() LIMIT 500))'
+            query: 'select user_id, object_id from like where object_id in (select object_id from photo WHERE aid IN (select aid from album WHERE owner=me() LIMIT 25))'
         },
         function(data) {
             console.log("countPhotoLikes(): " + data.length) ;
+            //console.log(data);
             for(var i=0;i<data.length;i++){
                 if(data[i].hasOwnProperty("user_id")){
                     addUserTrackHighest(data[i]["user_id"]);
@@ -238,7 +240,7 @@ function countPhotoLikes(){
 }
 
 function countPostLikes(){
-    FB.api('/me/posts&limit=5000', function(response) {
+    FB.api('/me/posts&limit=1000', function(response) {
         console.log("countPostLikes()");
         collateLikes(response);
         
@@ -342,7 +344,7 @@ function waitForImageLoad(){
     if(IMAGE_LOADED && LOADER_FINISHED){
         showHide('#result', '#loader');
     } else {
-        console.log("waitForImageLoad 100 ms");
+        console.log("waitForImageLoad");
         setTimeout(waitForImageLoad,500);
     }
 }
