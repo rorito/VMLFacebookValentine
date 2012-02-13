@@ -134,15 +134,16 @@ $(document).ready(function(){
     }
 });
 
-//function onTimeout(){
-//    console.log("ontimeout");
-//    $('.fbText').text("There was an error accessing Facebook. Let's try again");
+function onTimeout(){
+    console.log("ontimeout");
+    $('.fbText').text("Wow, post much? Our little search-bot is exhausted! Click refresh to try again.");
 //    window.setTimeout(funtion() {
 //            window.location.href = document.location.href+"?timeout";
 //    }, 3000);
-//}
+}
 
 function fbLoginStatus(response) {
+    //console.log("fbLoginStatus");
     if(TIMEDOUT){
         clickedFBLoginButton = true;
     }
