@@ -141,20 +141,6 @@ function fbLoginStatus(response) {
     }
 }
 
-var hasMorePosts = true;
-var graphAPIPosts = [];
-
-function getGraphPosts(url){
-    if(!response.hasOwnProperty("paging")){
-        hasMorePosts = false;
-    }
-    if(response && response.data){
-        return response.data;
-    } else {
-        return [];
-    }
-}
-
 var user_id_counts = {};
 var highestCount = 0;
 var topLikers = [];
@@ -251,9 +237,6 @@ function countPhotoLikes(){
     );
 }
 
-
-
-
 function countPostLikes(){
     FB.api('/me/posts&limit=5000', function(response) {
         console.log("countPostLikes()");
@@ -272,41 +255,39 @@ function countLikes() {
 
 function parseTopLikers(){
     if(topLikers.length < 1){ topLikers.push(""); }
-    
-//    console.log("top likers");
-//    console.log(topLikers);
-    
+                
     FB.api(
-        {
-            method: 'fql.query',
-            query: 'SELECT uid, first_name, last_name, pic_big FROM user WHERE uid = ' + topLikers[0].toString()
-        },
-        function(data) {
-            if(data.length > 0){
-                var topName = data[0].first_name + ' '+ data[0].last_name + ' liked you ' + highestCount + ' time' + (highestCount > 1?'s':'');
-                var topPic = data[0].pic_big;
-                VALENTINE = data[0].uid;
+    {
+        method: 'fql.query',
+        query: 'SELECT uid, first_name, last_name, pic_big FROM user WHERE uid = ' + topLikers[0].toString()
+    },
+    function(data) {
+        if(data.length > 0){
+            var topName = data[0].first_name + ' '+ data[0].last_name + ' likes you!';
+            var topPic = data[0].pic_big;
+            VALENTINE = data[0].uid;
 
+            setResult(topName, topPic);
+        } else {
+            var topName = "Yourself.";
+            $('.text').text('You seem to be the only one who likes your posts. (Well, at least you can give yourself a big old hug!)');
+            $('.facebook-continue').hide();
+            var topPic;
+            FB.api('/me/?fields=picture&type=large', function(response) {
+                console.log(response);
+                if(response && response.picture){
+                    topPic = response.picture;
+                } else {
+                    topPic = "img/test.jpg";
+                }
+
+                window.setTimeout(function(){showHide('#happy', '#result')}, LIKE_DELAY * $('#loader li').length + NO_LIKE_DEALY);
                 setResult(topName, topPic);
-            } else {
-                    var topName = "Yourself.";
-                    $('.text').text('You seem to be the only one who likes your posts. (Well, at least you can give yourself a big old hug!)');
-                    $('.facebook-continue').hide();
-                    var topPic;
-                    FB.api('/me/?fields=picture&type=large', function(response) {
-                        //console.log(response);
-                        if(response && response.picture){
-                            topPic = response.picture;
-                        } else {
-                            topPic = "img/test.jpg";
-                        }
-
-                        window.setTimeout(function(){showHide('#happy', '#result')}, LIKE_DELAY * $('#loader li').length + NO_LIKE_DEALY);
-                        setResult(topName, topPic);
-                    });
-            }
+            });
         }
-    );    
+    console.log(topName + " == " + highestCount);
+    }
+    );
 }
 
 
@@ -319,6 +300,7 @@ function parseTopLikers(){
 
 function setResult(_topName, _topPic){
     _topPic = TEST?'img/test.jpeg':_topPic;
+    _topName = TEST?'Nobody.':_topName;
     
     $('.name').text(_topName);
     if(!DEBUG){ 
@@ -344,13 +326,7 @@ function setResult(_topName, _topPic){
                         'display':'none'
                     }
                 );   
-            }
-            
-            
-//            if(LOADER_FINISHED){
-//                showHide("#result","#loader");
-//            }
-            
+            }            
         });
     } else { //DEBUG ONLY
         $('.frame img').attr('src', topPic).bind('load', function(_e){
@@ -359,57 +335,58 @@ function setResult(_topName, _topPic){
         });
     }
     
-    //profile image is now loaded
-//    if(!DEBUG_LIKE_SCREEN){
-        IMAGE_LOADED = true;
-//    }
+    IMAGE_LOADED = true;
 }
 
 function waitForImageLoad(){
     if(IMAGE_LOADED && LOADER_FINISHED){
         showHide('#result', '#loader');
     } else {
-        //console.log("waitForImageLoad 100 ms");
-        setTimeout(waitForImageLoad,100);
+        console.log("waitForImageLoad 100 ms");
+        setTimeout(waitForImageLoad,500);
     }
 }
 
 function showLoader(){
     showHide('#loader', '#welcome');
-    var numLis = 0;
     var $loaderli = $('#loader li');
-    $loaderli.each(function(_i, _this){
-        $this = $(_this);
-        $this.delay(LIKE_DELAY * _i).fadeIn(FADEIN_DELAY);
-        numLis++;
-//        if(_i == $loaderli.length-1){
-//            window.setTimeout(function(){
-//                showHide('#result', '#loader'); 
-//                }, 
-//            LIKE_DELAY * $loaderli.length);
-//        }
-    });
+    resetLoader($loaderli)
     
-    var opts = {
-      lines: 12, // The number of lines to draw
-      length: 7, // The length of each line
-      width: 4, // The line thickness
-      radius: 10, // The radius of the inner circle
-      color: '#000', // #rgb or #rrggbb
-      speed: 1, // Rounds per second
-      trail: 60, // Afterglow percentage
-      shadow: false, // Whether to render a shadow
-      hwaccel: false // Whether to use hardware acceleration
-    };
-    var target = document.getElementById('fbStillWaiting');
-    var spinner = new Spinner(opts).spin(target);
+    // var opts = {
+    //   lines: 12, // The number of lines to draw
+    //   length: 7, // The length of each line
+    //   width: 4, // The line thickness
+    //   radius: 10, // The radius of the inner circle
+    //   color: '#C18EAD', // #rgb or #rrggbb
+    //   speed: 1, // Rounds per second
+    //   trail: 60, // Afterglow percentage
+    //   shadow: false, // Whether to render a shadow
+    //   hwaccel: false // Whether to use hardware acceleration
+    // };
+
+    //var _spinner = new Spinner(opts).spin($('.fbStillWaiting')[0]);
     
-    setTimeout("LOADER_FINISHED = true;",LIKE_DELAY * numLis+1);
-    $('#fbStillWaiting').delay(LIKE_DELAY * numLis+1).fadeIn(FADEIN_DELAY);
-    $('#fbText').delay(LIKE_DELAY * numLis+1).fadeIn(FADEIN_DELAY);
+    //$('.fbStillWaiting').delay(LIKE_DELAY * $loaderli.length+1).fadeIn(FADEIN_DELAY);
+    $('.fbText').delay(LIKE_DELAY * $loaderli.length+1).fadeIn(FADEIN_DELAY);
     
     //we setup the loader image progression, now let's wait for the FB calls and image load to finish
     waitForImageLoad();
+}
+
+function resetLoader(_loaderli){
+    _loaderli.each(function(_i, _this){
+        $this = $(_this);
+        $this.hide();
+        $this.delay(LIKE_DELAY * _i).fadeIn(FADEIN_DELAY);
+    }); 
+
+    window.setTimeout(
+        function(){
+            LOADER_FINISHED = true;
+            resetLoader(_loaderli);
+        },
+        LIKE_DELAY * _loaderli.length+1
+    );
 }
 
 function contactValentine(){
