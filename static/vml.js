@@ -17,8 +17,8 @@ different one each time if ties
     //http://stackoverflow.com/questions/3211037/get-users-facebook-likes-with-fql
 */
 
-var ROOT_URL = 'http://localhost:8080/'
-//var ROOT_URL = 'http://vmlfbval.appspot.com';
+//var ROOT_URL = 'http://localhost:8080/'
+var ROOT_URL = 'http://vmlfbval.appspot.com';
 //var ROOT_URL = 'http://www.wholikelikesyou.com';
 var VALENTINE = '';
 var MESSAGE = '';
