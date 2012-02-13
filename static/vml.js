@@ -92,8 +92,8 @@ $(document).ready(function(){
         $audioElement = $(audioElement);
         var _src;
         var _type;
-        if(OGG){ _src = TEST?'sound/test.ogg':'sound/amour.ogg'; _type = 'audio/ogg';}
-        else if(MP3){ _src = TEST?'sound/test.mp3':'sound/amour.mp3'; _type = 'audio/mpeg';}
+        if(OGG){ _src = TEST?'sound/test.ogg':'sound/amour_final.ogg'; _type = 'audio/ogg';}
+        else if(MP3){ _src = TEST?'sound/test.mp3':'sound/amour_final.mp3'; _type = 'audio/mpeg';}
         $audioElement.attr({
             'volume': '.5',
             'autoplay':'autoplay',
