@@ -219,7 +219,7 @@ function countAlbumLikes(){
             query: 'select user_id from like where object_id IN (select object_id from album WHERE owner=me() LIMIT 25)'
         },
         function(data) {
-            if(data && data.length > 0){
+            //if(data && data.length > 0){
                                 //console.log("countAlbumLikes(): " + data.length);
                 ////console.log(data);
                 for(var i=0;i<data.length;i++){
@@ -230,9 +230,9 @@ function countAlbumLikes(){
                 
                 countPhotoLikes();
             
-            } else {
-                onTimeout();
-            }
+            // } else {
+            //     onTimeout();
+            // }
 
         }
     );
@@ -243,10 +243,10 @@ function countPhotoLikes(){
     FB.api(
         {
             method: 'fql.query',
-            query: 'select user_id, object_id from like where object_id in (select object_id from photo WHERE aid IN (select aid from album WHERE owner=me() LIMIT 25))'
+            query: 'select user_id, object_id from like where object_id in (select object_id from photo WHERE aid IN (select aid from album WHERE owner=me() LIMIT 15))'
         },
         function(data) {
-            if(data && data.length > 0){
+            //if(data && data.length > 0){
                 //console.log("countPhotoLikes(): " + data.length) ;
                 ////console.log(data);
                 for(var i=0;i<data.length;i++){
@@ -261,22 +261,22 @@ function countPhotoLikes(){
                 ////console.log(user_id_counts);
                 
                 parseTopLikers();
-            } else {
-                onTimeout();
-            }
+            // } else {
+            //     onTimeout();
+            // }
         }
     );
 }
 
 function countPostLikes(){
-    FB.api('/me/posts&limit=1000', function(response) {
+    FB.api('/me/posts&limit=500', function(response) {
         //console.log("countPostLikes()");
-        if(response.data && response.data.length > 0){
+        //if(response.data && response.data.length > 0){
             collateLikes(response);
             countAlbumLikes();
-        } else {
-            onTimeout();
-        }
+        // } else {
+        //     onTimeout();
+        // }
     });    
 }
 
@@ -434,7 +434,7 @@ function contactValentine(){
                 to: VALENTINE,
                 name: 'You\'re my Facebook Valentine!',
                 link: ROOT_URL, //CHANGE!!!
-                picture: ROOT_URL + 'img/app_icon.gif',
+                picture: ROOT_URL + '/img/app_icon.gif',
                 description: MESSAGE
             },
         function(response) {

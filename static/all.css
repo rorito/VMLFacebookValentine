@@ -92,6 +92,7 @@ body {
 }
 
 #loader{
+	display: none;
 	margin: 300px auto;
 	position: relative;
 	width:650px;
@@ -113,6 +114,7 @@ body {
 }
 
 #result {
+	display: none;
 	margin: 50px auto;
 	position: relative;
 	width:812px;
@@ -160,6 +162,7 @@ body {
 }
 
 #message {
+	display: none;
 	margin: 60px auto;
 	position: relative;
 	width:615px;
@@ -213,6 +216,7 @@ body {
 
 
 #happy{
+	display: none;
 	margin: 60px auto;
 	position: relative;
 	width:875px;
