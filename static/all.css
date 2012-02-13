@@ -67,6 +67,7 @@ body {
 }
 
 .fb-login-button{
+	display: none;
 	position: absolute;
 	left:696px;
 	top:556px;
