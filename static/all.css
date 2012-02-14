@@ -22,11 +22,11 @@ body {
 #fb-root { position:fixed; top:10%;}
 
 .fb_edge_comment_widget.fb_iframe_widget{
-	top: -162px !important;
+	top: -169px !important;
 	left: -340px !important;
 	position: absolute;
 	overflow: hidden;
-	height: 156px;
+	height: 164px;
 	border-top: 1px solid;
 	width: 393px;
 }
